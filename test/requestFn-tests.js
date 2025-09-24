@@ -33,11 +33,11 @@ describe('all refactoring tests', () => {
             cb('hello', 'world')
         }
 
-        const mockCallback = createSpyCallback();
+        const spyCallback = createSpyCallback();
 
-        helloWorld(mockCallback);
+        helloWorld(spyCallback);
 
-        const called = mockCallback.calls;
+        const called = spyCallback.calls;
 
         assert.equal(called[0][0], 'hello')
         assert.equal(called[0][1], 'world')
@@ -66,10 +66,10 @@ describe('all refactoring tests', () => {
     ];
     testCases.forEach(({name, fn, opts}) => {
         it(name, (done) => {
-            const mockCb = createSpyCallback();
+            const spyCb = createSpyCallback();
             fn(opts, (...args) => {
-                mockCb(...args);
-                assert.deepEqual(mockCb.calls[0][2], JSON.stringify({
+                spyCb(...args);
+                assert.deepEqual(spyCb.calls[0][2], JSON.stringify({
                     body: "hello world",
                     responseCode: 200
                 }))
