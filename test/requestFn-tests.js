@@ -2,13 +2,13 @@
 import {canRequest, canRequestAxios, canRequestAxiosPromise} from "../src/requestFn.js";
 import nock from "nock";
 
-function createMockCallback() {
+function createSpyCallback() {
     const calls = [];
-    const mockFn = function (...args) {
+    const spyFn = function (...args) {
         calls.push(args)
     }
-    mockFn.calls = calls;
-    return mockFn;
+    spyFn.calls = calls;
+    return spyFn;
 }
 describe('all refactoring tests', () => {
     beforeEach(() => {
@@ -33,7 +33,7 @@ describe('all refactoring tests', () => {
             cb('hello', 'world')
         }
 
-        const mockCallback = createMockCallback();
+        const mockCallback = createSpyCallback();
 
         helloWorld(mockCallback);
 
@@ -66,7 +66,7 @@ describe('all refactoring tests', () => {
     ];
     testCases.forEach(({name, fn, opts}) => {
         it(name, (done) => {
-            const mockCb = createMockCallback();
+            const mockCb = createSpyCallback();
             fn(opts, (...args) => {
                 mockCb(...args);
                 assert.deepEqual(mockCb.calls[0][2], JSON.stringify({
@@ -91,7 +91,7 @@ describe('all refactoring tests', () => {
     ];
     testCasesNoCallback.forEach(({name, fn, opts}) => {
         it(name, (done) => {
-            const cbFn = createMockCallback();
+            const cbFn = createSpyCallback();
             fn(opts)
                 .then((response) => {
                     cbFn(null, response, JSON.stringify(response.data));
