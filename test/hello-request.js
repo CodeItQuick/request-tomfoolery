@@ -42,56 +42,39 @@ describe('other tests', () => {
         assert.equal(called[0][0], 'hello')
         assert.equal(called[0][1], 'world')
     })
-    it("should be able to request GET a hello", (done) => {
-        const fancy = createMockCallback();
-
-        canRequest({url: 'http://localhost:3000', method: 'GET'}, (...args) => {
-            fancy(...args);
-
-            assert.deepEqual(fancy.calls[0][2], JSON.stringify({
-                body: "hello world",
-                responseCode: 200
-            }))
-            done()
-        })
-    });
-    it("should be able to request POST a hello", (done) => {
-        const fancy = createMockCallback();
-
-        canRequest({url: 'http://localhost:3000', method: 'POST'}, (...args) => {
-            fancy(...args);
-
-            assert.deepEqual(fancy.calls[0][2], JSON.stringify({
-                body: "hello world",
-                responseCode: 200
-            }))
-            done()
-        })
-    })
-    it("should be able to request a GET hello with axios", (done) => {
-        const fancy = createMockCallback();
-
-        canRequestAxios({uri: 'http://localhost:3000', method: 'GET'}, (...args) => {
-            fancy(...args);
-
-            assert.deepEqual(fancy.calls[0][2], JSON.stringify({
-                body: "hello world",
-                responseCode: 200
-            }))
-            done();
-        })
-    })
-    it("should be able to request a POST hello with axios", (done) => {
-        const fancy = createMockCallback();
-
-        canRequestAxios({uri: 'http://localhost:3000', method: 'POST'}, (...args) => {
-            fancy(...args);
-
-            assert.deepEqual(fancy.calls[0][2], JSON.stringify({
-                body: "hello world",
-                responseCode: 200
-            }))
-            done();
-        })
+    const testCases = [
+        {
+            name: "should be able to request GET a hello",
+            fn: canRequest,
+            opts: {url: 'http://localhost:3000', method: 'GET'},
+        },
+        {
+            name: "should be able to request POST a hello",
+            fn: canRequest,
+            opts: {url: 'http://localhost:3000', method: 'POST'},
+        },
+        {
+            name: "should be able to request a GET hello with axios",
+            fn: canRequestAxios,
+            opts: {uri: 'http://localhost:3000', method: 'GET'},
+        },
+        {
+            name: "should be able to request a POST hello with axios",
+            fn: canRequestAxios,
+            opts: {uri: 'http://localhost:3000', method: 'POST'},
+        }
+    ];
+    testCases.forEach(({name, fn, opts}) => {
+        it(name, (done) => {
+            const fancy = createMockCallback();
+            fn(opts, (...args) => {
+                fancy(...args);
+                assert.deepEqual(fancy.calls[0][2], JSON.stringify({
+                    body: "hello world",
+                    responseCode: 200
+                }))
+                done();
+            });
+        });
     });
 });
