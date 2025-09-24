@@ -66,10 +66,10 @@ describe('all refactoring tests', () => {
     ];
     testCases.forEach(({name, fn, opts}) => {
         it(name, (done) => {
-            const fancy = createMockCallback();
+            const mockCb = createMockCallback();
             fn(opts, (...args) => {
-                fancy(...args);
-                assert.deepEqual(fancy.calls[0][2], JSON.stringify({
+                mockCb(...args);
+                assert.deepEqual(mockCb.calls[0][2], JSON.stringify({
                     body: "hello world",
                     responseCode: 200
                 }))
