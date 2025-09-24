@@ -5,7 +5,7 @@ function canRequest(options, cbFn) {
     request(options, cbFn);
 }
 
-function canRequestAxios(options, cbFn, done) {
+function canRequestAxios(options, cbFn) {
     options.url = options.uri;
     axios(options)
         .then((response) => {
@@ -17,4 +17,8 @@ function canRequestAxios(options, cbFn, done) {
         })
 }
 
-export { canRequest, canRequestAxios }
+function canRequestAxiosPromise(options) {
+    return axios(options);
+}
+
+export { canRequest, canRequestAxios, canRequestAxiosPromise }

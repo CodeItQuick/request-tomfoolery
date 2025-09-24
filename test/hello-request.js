@@ -1,5 +1,5 @@
 ﻿import * as assert from "node:assert";
-import {canRequest, canRequestAxios} from "../src/requestFn.js";
+import {canRequest, canRequestAxios, canRequestAxiosPromise} from "../src/requestFn.js";
 import nock from "nock";
 
 function createMockCallback() {
@@ -10,7 +10,7 @@ function createMockCallback() {
     mockFn.calls = calls;
     return mockFn;
 }
-describe('other tests', () => {
+describe('all refactoring tests', () => {
     beforeEach(() => {
         nock('http://localhost:3000')
             .get('/')
@@ -44,22 +44,22 @@ describe('other tests', () => {
     })
     const testCases = [
         {
-            name: "should be able to request GET a hello",
+            name: "can call the old method with a GET request and a callback",
             fn: canRequest,
             opts: {url: 'http://localhost:3000', method: 'GET'},
         },
         {
-            name: "should be able to request POST a hello",
+            name: "can call the old method with a POST request and a callback",
             fn: canRequest,
             opts: {url: 'http://localhost:3000', method: 'POST'},
         },
         {
-            name: "should be able to request a GET hello with axios",
+            name: "can call the new axios method with a GET request and a callback",
             fn: canRequestAxios,
             opts: {uri: 'http://localhost:3000', method: 'GET'},
         },
         {
-            name: "should be able to request a POST hello with axios",
+            name: "can call the new axios method with a POST request and a callback",
             fn: canRequestAxios,
             opts: {uri: 'http://localhost:3000', method: 'POST'},
         }
@@ -75,6 +75,32 @@ describe('other tests', () => {
                 }))
                 done();
             });
+        });
+    });
+    const testCasesNoCallback = [
+        {
+            name: "can call the new axios method and adopt the new promise syntax with a GET request and a callback",
+            fn: canRequestAxiosPromise,
+            opts: {url: 'http://localhost:3000', method: 'GET'},
+        },
+        {
+            name: "can call the new axios method and adopt the new promise syntax with a POST request and a callback",
+            fn: canRequestAxiosPromise,
+            opts: {url: 'http://localhost:3000', method: 'POST'},
+        }
+    ];
+    testCasesNoCallback.forEach(({name, fn, opts}) => {
+        it(name, (done) => {
+            const cbFn = createMockCallback();
+            fn(opts)
+                .then((response) => {
+                    cbFn(null, response, JSON.stringify(response.data));
+                })
+                .catch((error) => {
+                    cbFn(error, null, null);
+                    throw error;
+                });
+            done();
         });
     });
 });
