@@ -79,12 +79,12 @@ describe('all refactoring tests', () => {
     });
     const testCasesNoCallback = [
         {
-            name: "can call the new axios method and adopt the new promise syntax with a GET request and a callback",
+            name: "can call the new axios method and adopt the new promise syntax with a GET request",
             fn: canRequestAxiosPromise,
             opts: {url: 'http://localhost:3000', method: 'GET'},
         },
         {
-            name: "can call the new axios method and adopt the new promise syntax with a POST request and a callback",
+            name: "can call the new axios method and adopt the new promise syntax with a POST request",
             fn: canRequestAxiosPromise,
             opts: {url: 'http://localhost:3000', method: 'POST'},
         }
