@@ -289,4 +289,72 @@ describe('all refactoring tests', () => {
             });
         });
     });
+    [
+        {
+            name: 'should send and receive cookies with canRequest (GET)',
+            fn: canRequest,
+            opts: {
+                url: 'http://localhost:3000/headers',
+                method: 'GET',
+                headers: {
+                    'Cookie': 'sessionid=abc123; userid=42'
+                }
+            }
+        },
+        {
+            name: 'should send and receive cookies with canRequestAxios (GET)',
+            fn: canRequestAxios,
+            opts: {
+                uri: 'http://localhost:3000/headers',
+                method: 'GET',
+                headers: {
+                    'Cookie': 'sessionid=abc123; userid=42'
+                }
+            }
+        },
+        {
+            name: 'should send and receive cookies with canRequest (POST)',
+            fn: canRequest,
+            opts: {
+                url: 'http://localhost:3000/headers',
+                method: 'POST',
+                headers: {
+                    'Cookie': 'sessionid=abc123; userid=42'
+                }
+            }
+        },
+        {
+            name: 'should send and receive cookies with canRequestAxios (POST)',
+            fn: canRequestAxios,
+            opts: {
+                uri: 'http://localhost:3000/headers',
+                method: 'POST',
+                headers: {
+                    'Cookie': 'sessionid=abc123; userid=42'
+                }
+            }
+        }
+    ].forEach(({name, fn, opts}) => {
+        it(name, (done) => {
+            nock('http://localhost:3000', {
+                reqheaders: {
+                    'Cookie': 'sessionid=abc123; userid=42'
+                }
+            })
+                [opts.method.toLowerCase()]('/headers')
+                .reply(200, { received: true }, {
+                    'Set-Cookie': 'sessionid=abc123; userid=42'
+                });
+            fn(opts, (err, res, body) => {
+                assert.ifError(err);
+                assert.ok(res);
+                assert.equal(JSON.parse(body).received, true);
+                // Check that the response contains the Set-Cookie header
+                assert.ok(res.headers['set-cookie']);
+                assert.ok(res.headers['set-cookie'][0].includes('sessionid=abc123'));
+                assert.ok(res.headers['set-cookie'][0].includes('userid=42'));
+                done();
+            });
+        });
+    });
 });
