@@ -10,6 +10,7 @@ function createSpyCallback() {
     spyFn.calls = calls;
     return spyFn;
 }
+
 describe('all refactoring tests', () => {
     beforeEach(() => {
         nock('http://localhost:3000')
@@ -101,6 +102,73 @@ describe('all refactoring tests', () => {
                     throw error;
                 });
             done();
+        });
+    });
+    [
+        {
+            name: 'should send custom headers for GET request with canRequest',
+            fn: canRequest,
+            opts: {url: 'http://localhost:3000/headers', method: 'GET', headers: {'x-custom-header': 'test-value'}}
+        },
+        {
+            name: 'should send custom headers for GET request with canRequestAxios',
+            fn: canRequestAxios,
+            opts: {uri: 'http://localhost:3000/headers', method: 'GET', headers: {'x-custom-header': 'test-value'}}
+        },
+        {
+            name: 'should send custom headers for POST request with canRequest',
+            fn: canRequest,
+            opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
+        },
+        {
+            name: 'should send custom headers for POST request with canRequestAxios',
+            fn: canRequestAxios,
+            opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
+        },
+    ].forEach(({name, fn, opts}) => {
+        it(name, (done) => {
+            nock('http://localhost:3000', {
+                reqheaders: {
+                    'x-custom-header': 'test-value'
+                }
+            })[opts.method.toLowerCase()]('/headers')
+                .reply(200, {received: true}, {'x-custom-header': 'test-value'});
+            fn(opts, (err, res, body) => {
+                assert.ifError(err);
+                assert.ok(res);
+                assert.equal(JSON.parse(body).received, true);
+                assert.equal(res.headers['x-custom-header'], 'test-value');
+                // assert.equal(res.getHeader('x-custom-header'), 'test-value');
+                done();
+            });
+        });
+    });
+    [{
+        name: 'should send custom headers with canRequestAxios',
+        fn: canRequestAxios,
+        opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
+    },
+        {
+            name: 'should send custom headers with canRequestAxios',
+            fn: canRequestAxios,
+            opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
+        }].forEach(({name, fn, opts}) => {
+        it(`for ${opts.method} request should send custom headers with canRequestAxiosPromise`, async () => {
+            nock('http://localhost:3000', {
+                reqheaders: {
+                    'x-custom-header': 'test-value'
+                }
+            })
+                .get('/headers')
+                .reply(200, {received: true}, { 'x-custom-header': 'test-value' });
+            const response = await canRequestAxiosPromise({
+                url: 'http://localhost:3000/headers',
+                method: 'GET',
+                headers: {'x-custom-header': 'test-value'}
+            });
+            assert.ok(response);
+            assert.equal(response.data.received, true);
+            assert.equal(response.headers['x-custom-header'], 'test-value');
         });
     });
 });
