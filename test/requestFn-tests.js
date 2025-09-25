@@ -171,4 +171,76 @@ describe('all refactoring tests', () => {
             assert.equal(response.headers['x-custom-header'], 'test-value');
         });
     });
+    [
+        {
+            name: 'should send Authorization and Content-Type headers with canRequest (GET)',
+            fn: canRequest,
+            opts: {
+                url: 'http://localhost:3000/headers',
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer testtoken',
+                    'Content-Type': 'application/json'
+                }
+            }
+        },
+        {
+            name: 'should send Authorization and Content-Type headers with canRequestAxios (GET)',
+            fn: canRequestAxios,
+            opts: {
+                uri: 'http://localhost:3000/headers',
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer testtoken',
+                    'Content-Type': 'application/json'
+                }
+            }
+        },
+        {
+            name: 'should send Authorization and Content-Type headers with canRequest (POST)',
+            fn: canRequest,
+            opts: {
+                url: 'http://localhost:3000/headers',
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer testtoken',
+                    'Content-Type': 'application/json'
+                }
+            }
+        },
+        {
+            name: 'should send Authorization and Content-Type headers with canRequestAxios (POST)',
+            fn: canRequestAxios,
+            opts: {
+                uri: 'http://localhost:3000/headers',
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer testtoken',
+                    'Content-Type': 'application/json'
+                }
+            }
+        }
+    ].forEach(({name, fn, opts}) => {
+        it(name, (done) => {
+            nock('http://localhost:3000', {
+                reqheaders: {
+                    'Authorization': 'Bearer testtoken',
+                    'Content-Type': 'application/json'
+                }
+            })
+                [opts.method.toLowerCase()]('/headers')
+                .reply(200, { received: true }, {
+                    'Authorization': 'Bearer testtoken',
+                    'Content-Type': 'application/json'
+                });
+            fn(opts, (err, res, body) => {
+                assert.ifError(err);
+                assert.ok(res);
+                assert.equal(JSON.parse(body).received, true);
+                assert.equal(res.headers['authorization'], 'Bearer testtoken');
+                assert.equal(res.headers['content-type'], 'application/json');
+                done();
+            });
+        });
+    });
 });
