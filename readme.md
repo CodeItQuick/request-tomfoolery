@@ -5,6 +5,29 @@ Swapping from the request library to axios? Well this repository has some answer
 in terms of incremental refactoring using tests. Specifically, it shows a method 
 to wrap the request library itself then migrate to axios with promises in 2 steps.
 
+## The problem
+
+You have an old library called "request" in your code that is no longer maintained. It has been replaced by several 
+possible alternatives.
+
+Example code:
+
+```js
+request({ url: `http://localhost:${PORT}/hello-make-request`, method: 'GET' }, 
+    (err, response, body) => {
+    if (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    } else {
+        try {
+            const data = JSON.parse(body);
+            res.json(data);
+        } catch (e) {
+            res.status(500).json({ error: 'Invalid response from /hello' });
+        }
+    }
+});
+```
+
 ## How? Getting Started
 
 ```js
