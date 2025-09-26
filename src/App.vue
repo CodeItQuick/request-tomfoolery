@@ -2,7 +2,8 @@
   <div>
     <h1>Welcome to Vue 3!</h1>
     <p>This is your new Vue app inside the using-request project.</p>
-    <button @click="fetchMessage">Get Server Message</button>
+    <button @click="fetchMessage">Get Server Message (make-request)</button>
+    <button @click="fetchAxiosMessage">Get Server Message (make-axios)</button>
     <div v-if="message">Server says: {{ message }}</div>
     <div v-if="error" style="color: red">{{ error }}</div>
   </div>
@@ -22,6 +23,21 @@ export default {
       this.error = '';
       try {
         const response = await fetch('http://localhost:3000/make-request');
+        if (!response.ok) {
+          this.error = 'Network response was not ok';
+          return;
+        }
+        const data = await response.json();
+        this.message = data.message;
+      } catch (err) {
+        this.error = 'Request failed: ' + err.message;
+      }
+    },
+    async fetchAxiosMessage() {
+      this.message = '';
+      this.error = '';
+      try {
+        const response = await fetch('http://localhost:3000/make-axios');
         if (!response.ok) {
           this.error = 'Network response was not ok';
           return;
