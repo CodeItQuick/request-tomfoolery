@@ -82,7 +82,7 @@ app.post('/register', async (req, res) => {
   });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login-request', (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Missing username or password' });
   db.get('SELECT * FROM users WHERE username = ?', [username], async (err, user) => {
@@ -91,6 +91,14 @@ app.post('/login', (req, res) => {
     if (!match) return res.status(401).json({ error: 'Invalid credentials' });
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
+  });
+});
+
+app.post('/login', (req, res) => {
+  makeRequest({ url: `http://localhost:${PORT}/login-request`, method: 'POST', json: true, body: req.body },
+      (err, response, body) => {
+    if (err) return res.status(500).json({ error: 'Internal server error' });
+    res.json(typeof body === 'string' ? JSON.parse(body) : body);
   });
 });
 
