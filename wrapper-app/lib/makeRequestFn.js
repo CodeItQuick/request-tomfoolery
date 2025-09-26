@@ -1,8 +1,8 @@
 ﻿import request from 'request';
 import axios from "axios";
 
-function makeRequest(options, cbFn) {
+function makeRequestFn(options, cbFn) {
     request(options, cbFn);
 }
 
-export { makeRequest }
+export { makeRequestFn }

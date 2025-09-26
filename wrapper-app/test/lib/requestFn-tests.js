@@ -1,8 +1,8 @@
 ﻿import * as assert from "node:assert";
 import nock from "nock";
-import {makeAxios} from "../../lib/makeAxios.js";
-import {makeRequest} from "../../lib/makeRequest.js";
-import {makePromisifiedAxios} from "../../lib/makePromisifiedAxios.js";
+import {makeAxiosFn} from "../../lib/makeAxiosFn.js";
+import {makeRequestFn} from "../../lib/makeRequestFn.js";
+import {makePromisifiedAxiosFn} from "../../lib/makePromisifiedAxiosFn.js";
 
 function createSpyCallback() {
     const calls = [];
@@ -48,22 +48,22 @@ describe('all refactoring tests', () => {
     const testCases = [
         {
             name: "can call the old method with a GET request and a callback",
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {url: 'http://localhost:3000', method: 'GET'},
         },
         {
             name: "can call the old method with a POST request and a callback",
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {url: 'http://localhost:3000', method: 'POST'},
         },
         {
             name: "can call the new axios method with a GET request and a callback",
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {uri: 'http://localhost:3000', method: 'GET'},
         },
         {
             name: "can call the new axios method with a POST request and a callback",
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {uri: 'http://localhost:3000', method: 'POST'},
         }
     ];
@@ -83,12 +83,12 @@ describe('all refactoring tests', () => {
     const testCasesNoCallback = [
         {
             name: "can call the new axios method and adopt the new promise syntax with a GET request",
-            fn: makePromisifiedAxios,
+            fn: makePromisifiedAxiosFn,
             opts: {url: 'http://localhost:3000', method: 'GET'},
         },
         {
             name: "can call the new axios method and adopt the new promise syntax with a POST request",
-            fn: makePromisifiedAxios,
+            fn: makePromisifiedAxiosFn,
             opts: {url: 'http://localhost:3000', method: 'POST'},
         }
     ];
@@ -109,22 +109,22 @@ describe('all refactoring tests', () => {
     [
         {
             name: 'should send custom headers for GET request with canRequest',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {url: 'http://localhost:3000/headers', method: 'GET', headers: {'x-custom-header': 'test-value'}}
         },
         {
             name: 'should send custom headers for GET request with canRequestAxios',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {uri: 'http://localhost:3000/headers', method: 'GET', headers: {'x-custom-header': 'test-value'}}
         },
         {
             name: 'should send custom headers for POST request with canRequest',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
         },
         {
             name: 'should send custom headers for POST request with canRequestAxios',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
         },
     ].forEach(({name, fn, opts}) => {
@@ -147,12 +147,12 @@ describe('all refactoring tests', () => {
     });
     [{
         name: 'should send custom headers with canRequestAxios',
-        fn: makeAxios,
+        fn: makeAxiosFn,
         opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
     },
         {
             name: 'should send custom headers with canRequestAxios',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {uri: 'http://localhost:3000/headers', method: 'POST', headers: {'x-custom-header': 'test-value'}}
         }].forEach(({name, fn, opts}) => {
         it(`for ${opts.method} request should send custom headers with canRequestAxiosPromise`, async () => {
@@ -163,7 +163,7 @@ describe('all refactoring tests', () => {
             })
                 .get('/headers')
                 .reply(200, {received: true}, { 'x-custom-header': 'test-value' });
-            const response = await makePromisifiedAxios({
+            const response = await makePromisifiedAxiosFn({
                 url: 'http://localhost:3000/headers',
                 method: 'GET',
                 headers: {'x-custom-header': 'test-value'}
@@ -176,7 +176,7 @@ describe('all refactoring tests', () => {
     [
         {
             name: 'should send Authorization and Content-Type headers with canRequest (GET)',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {
                 url: 'http://localhost:3000/headers',
                 method: 'GET',
@@ -188,7 +188,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send Authorization and Content-Type headers with canRequestAxios (GET)',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {
                 uri: 'http://localhost:3000/headers',
                 method: 'GET',
@@ -200,7 +200,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send Authorization and Content-Type headers with canRequest (POST)',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {
                 url: 'http://localhost:3000/headers',
                 method: 'POST',
@@ -212,7 +212,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send Authorization and Content-Type headers with canRequestAxios (POST)',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {
                 uri: 'http://localhost:3000/headers',
                 method: 'POST',
@@ -247,7 +247,7 @@ describe('all refactoring tests', () => {
     [
         {
             name: 'should send Authorization and Content-Type (form-data) headers with canRequest (POST)',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {
                 url: 'http://localhost:3000/headers',
                 method: 'POST',
@@ -259,7 +259,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send Authorization and Content-Type (form-data) headers with canRequestAxios (POST)',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {
                 uri: 'http://localhost:3000/headers',
                 method: 'POST',
@@ -294,7 +294,7 @@ describe('all refactoring tests', () => {
     [
         {
             name: 'should send and receive cookies with canRequest (GET)',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {
                 url: 'http://localhost:3000/headers',
                 method: 'GET',
@@ -305,7 +305,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send and receive cookies with canRequestAxios (GET)',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {
                 uri: 'http://localhost:3000/headers',
                 method: 'GET',
@@ -316,7 +316,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send and receive cookies with canRequest (POST)',
-            fn: makeRequest,
+            fn: makeRequestFn,
             opts: {
                 url: 'http://localhost:3000/headers',
                 method: 'POST',
@@ -327,7 +327,7 @@ describe('all refactoring tests', () => {
         },
         {
             name: 'should send and receive cookies with canRequestAxios (POST)',
-            fn: makeAxios,
+            fn: makeAxiosFn,
             opts: {
                 uri: 'http://localhost:3000/headers',
                 method: 'POST',

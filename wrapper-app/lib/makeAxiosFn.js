@@ -1,6 +1,6 @@
 ﻿import axios from "axios";
 
-function makeAxios(options, cbFn) {
+function makeAxiosFn(options, cbFn) {
     options.url = options.uri;
     axios(options)
         .then((response) => {
@@ -12,4 +12,4 @@ function makeAxios(options, cbFn) {
         })
 }
 
-export { makeAxios }
+export { makeAxiosFn }
