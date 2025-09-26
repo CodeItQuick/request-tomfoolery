@@ -23,7 +23,8 @@ const usePromisifiedAxios = new MakeHttp(makePromisifiedAxiosFn) // new axios li
 an example call to the old request library:
 
 ```js
-useRequest.makeRequest({ url: `http://localhost:${PORT}/hello-make-request`, method: 'GET' }, (err, response, body) => {
+useRequest.makeRequest({ url: `http://localhost:${PORT}/hello-make-request`, method: 'GET' }, 
+    (err, response, body) => {
     if (err) {
         res.status(500).json({ error: 'Internal server error' });
     } else {
@@ -40,7 +41,8 @@ useRequest.makeRequest({ url: `http://localhost:${PORT}/hello-make-request`, met
 an example call to the new axios library with the same request library interface:
 
 ```js
-useAxios.makeAxios({ uri: `http://localhost:${PORT}/hello-make-axios`, method: 'GET' }, (err, response, body) => {
+useAxios.makeAxios({ uri: `http://localhost:${PORT}/hello-make-axios`, method: 'GET' }, 
+    (err, response, body) => {
     if (err) {
         res.status(500).json({ error: 'Internal server error' });
     } else {
@@ -58,7 +60,8 @@ an example call to the new axios library with the new promise interface:
 
 ```js
 try {
-    const response = await usePromisifiedAxios.makePromisifiedAxios({ url: `http://localhost:${PORT}/hello-make-promisified-axios`, method: 'GET' });
+    const response = await usePromisifiedAxios.makePromisifiedAxios(
+        { url: `http://localhost:${PORT}/hello-make-promisified-axios`, method: 'GET' });
     res.json(response.data);
 } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
