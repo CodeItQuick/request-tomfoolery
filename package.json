@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start:vue": "vite --config vite.config.js"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +17,11 @@
   "description": "",
   "dependencies": {
     "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "mocha": "^11.7.2",
     "nock": "^14.0.10",
+    "request": "^2.88.2",
     "vue": "^3.4.0"
   },
   "devDependencies": {
