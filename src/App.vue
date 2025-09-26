@@ -21,7 +21,7 @@ export default {
       this.message = '';
       this.error = '';
       try {
-        const response = await fetch('http://localhost:3000/');
+        const response = await fetch('http://localhost:3000/make-request');
         if (!response.ok) {
           this.error = 'Network response was not ok';
           return;
