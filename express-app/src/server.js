@@ -2,10 +2,10 @@
 const app = express();
 const PORT = process.env.PORT || 3000;
 import cors from 'cors';
-import {MakeHttp} from '../../wrapper-app/lib/makeHttp.js';
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import {MakeHttp} from '../../wrapper-app/lib/makeHttp.js';
 import {makeRequestFn} from "../../wrapper-app/lib/makeRequestFn.js";
 import {makePromisifiedAxiosFn} from "../../wrapper-app/lib/makePromisifiedAxiosFn.js";
 import {makeAxiosFn} from "../../wrapper-app/lib/makeAxiosFn.js";
