@@ -2,7 +2,7 @@
 const app = express();
 const PORT = process.env.PORT || 3000;
 import cors from 'cors';
-import { makeRequest, makeAxios, makePromisifiedAxios } from './lib/requestFn.js';
+import { makeRequest, makeAxios, makePromisifiedAxios } from '../../wrapper-app/lib/requestFn.js';
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
