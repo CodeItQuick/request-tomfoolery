@@ -2,16 +2,23 @@
 const app = express();
 const PORT = process.env.PORT || 3000;
 import cors from 'cors';
-import { makeRequest, makeAxios, makePromisifiedAxios } from '../../wrapper-app/lib/requestFn.js';
+import {MakeHttp} from '../../wrapper-app/lib/makeHttp.js';
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import {makeRequestFn} from "../../wrapper-app/lib/makeRequestFn.js";
+import {makePromisifiedAxiosFn} from "../../wrapper-app/lib/makePromisifiedAxiosFn.js";
+import {makeAxiosFn} from "../../wrapper-app/lib/makeAxiosFn.js";
 
 const JWT_SECRET = 'your_jwt_secret'; // Change to a secure secret in production
 const db = new sqlite3.Database('./auth.db');
 
 app.use(express.json());
 app.use(cors());
+
+const useRequest = new MakeHttp(makeRequestFn)
+const useAxios = new MakeHttp(makeAxiosFn)
+const usePromisifiedAxios = new MakeHttp(makePromisifiedAxiosFn)
 
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -26,7 +33,7 @@ app.get('/hello-make-request', (req, res) => {
 });
 
 app.get('/make-request', (req, res) => {
-  makeRequest({ url: `http://localhost:${PORT}/hello-make-request`, method: 'GET' }, (err, response, body) => {
+  useRequest.makeRequest({ url: `http://localhost:${PORT}/hello-make-request`, method: 'GET' }, (err, response, body) => {
     if (err) {
       res.status(500).json({ error: 'Internal server error' });
     } else {
@@ -45,7 +52,7 @@ app.get('/hello-make-axios', (req, res) => {
 });
 
 app.get('/make-axios', (req, res) => {
-  makeAxios({ uri: `http://localhost:${PORT}/hello-make-axios`, method: 'GET' }, (err, response, body) => {
+  useAxios.makeAxios({ uri: `http://localhost:${PORT}/hello-make-axios`, method: 'GET' }, (err, response, body) => {
     if (err) {
       res.status(500).json({ error: 'Internal server error' });
     } else {
@@ -65,7 +72,7 @@ app.get('/hello-make-promisified-axios', (req, res) => {
 
 app.get('/make-promisified-axios', async (req, res) => {
   try {
-    const response = await makePromisifiedAxios({ url: `http://localhost:${PORT}/hello-make-promisified-axios`, method: 'GET' });
+    const response = await usePromisifiedAxios.makePromisifiedAxios({ url: `http://localhost:${PORT}/hello-make-promisified-axios`, method: 'GET' });
     res.json(response.data);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
@@ -95,7 +102,7 @@ app.post('/login-request', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  makeRequest({ url: `http://localhost:${PORT}/login-request`, method: 'POST', json: true, body: req.body },
+  useRequest.makeRequest({ url: `http://localhost:${PORT}/login-request`, method: 'POST', json: true, body: req.body },
       (err, response, body) => {
     if (err) return res.status(500).json({ error: 'Internal server error' });
     res.json(typeof body === 'string' ? JSON.parse(body) : body);
@@ -103,7 +110,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/login-axios', (req, res) => {
-  makeAxios({ uri: `http://localhost:${PORT}/login-request`, method: 'POST', data: req.body }, (err, response, body) => {
+  useAxios.makeAxios({ uri: `http://localhost:${PORT}/login-request`, method: 'POST', data: req.body }, (err, response, body) => {
     if (err) return res.status(500).json({ error: 'Internal server error' });
     res.json(typeof body === 'string' ? JSON.parse(body) : body);
   });

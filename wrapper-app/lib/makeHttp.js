@@ -1,4 +1,4 @@
-﻿class MakeHttp {
+﻿export class MakeHttp {
     RequestLib;
 
     constructor(requestLibrary) {
@@ -6,13 +6,13 @@
     }
 
     makeRequest(options, cbFn) {
-        this.RequestLib.makeRequestFn(options, cbFn);
+        this.RequestLib(options, cbFn);
     }
     makeAxios(options, cbFn) {
-        this.RequestLib.makeAxiosFn(options, cbFn);
+        this.RequestLib(options, cbFn);
     }
     makePromisifiedAxios(options, cbFn) {
-        return this.RequestLib.makePromisifiedAxiosFn(options, cbFn);
+        return this.RequestLib(options, cbFn);
     }
 
 }
