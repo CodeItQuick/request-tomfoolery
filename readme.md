@@ -5,7 +5,7 @@ Swapping from the request library to axios? Well this repository has some answer
 in terms of incremental refactoring using tests. Specifically, it shows a method 
 to wrap the request library itself then migrate to axios with promises in 2 steps.
 
-# How? Getting Started
+## How? Getting Started
 
 ```js
 import {MakeHttp} from '../../wrapper-app/lib/makeHttp.js';
