@@ -1,9 +1,4 @@
-﻿import request from 'request';
-import axios from "axios";
-
-function makeRequest(options, cbFn) {
-    request(options, cbFn);
-}
+﻿import axios from "axios";
 
 function makeAxios(options, cbFn) {
     options.url = options.uri;
@@ -17,8 +12,4 @@ function makeAxios(options, cbFn) {
         })
 }
 
-function makePromisifiedAxios(options) {
-    return axios(options);
-}
-
-export { makeRequest, makeAxios, makePromisifiedAxios }
+export { makeAxios }

@@ -1,6 +1,8 @@
 ﻿import * as assert from "node:assert";
-import {makeRequest, makeAxios, makePromisifiedAxios} from "../lib/requestFn.js";
 import nock from "nock";
+import {makeAxios} from "../../lib/makeAxios.js";
+import {makeRequest} from "../../lib/makeRequest.js";
+import {makePromisifiedAxios} from "../../lib/makePromisifiedAxios.js";
 
 function createSpyCallback() {
     const calls = [];
