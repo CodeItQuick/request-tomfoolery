@@ -15,9 +15,12 @@ import {makeAxiosFn} from "../../wrapper-app/lib/makeAxiosFn.js";
 
 // then import the adapter functions you want:
 
-const useRequest = new MakeHttp(makeRequestFn) // original request library
-const useAxios = new MakeHttp(makeAxiosFn) // new axios library with same interfaces
-const usePromisifiedAxios = new MakeHttp(makePromisifiedAxiosFn) // new axios library with different interfaces
+// original request library
+const useRequest = new MakeHttp(makeRequestFn)
+// new axios library with same interfaces
+const useAxios = new MakeHttp(makeAxiosFn)
+// new axios library with different interfaces
+const usePromisifiedAxios = new MakeHttp(makePromisifiedAxiosFn)
 ```
 
 an example call to the old request library:
