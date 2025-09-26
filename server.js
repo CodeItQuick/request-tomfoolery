@@ -102,6 +102,13 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.post('/login-axios', (req, res) => {
+  makeAxios({ uri: `http://localhost:${PORT}/login-request`, method: 'POST', data: req.body }, (err, response, body) => {
+    if (err) return res.status(500).json({ error: 'Internal server error' });
+    res.json(typeof body === 'string' ? JSON.parse(body) : body);
+  });
+});
+
 function authMiddleware(req, res, next) {
   const authHeader = req.headers['authorization'];
   if (!authHeader) return res.status(401).json({ error: 'No token provided' });

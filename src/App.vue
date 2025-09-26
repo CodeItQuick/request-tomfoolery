@@ -12,6 +12,7 @@
       <input v-model="loginUsername" placeholder="Username" required />
       <input v-model="loginPassword" type="password" placeholder="Password" required />
       <button type="submit">Login</button>
+      <button type="button" @click="loginAxios">Login with Axios</button>
     </form>
     <button @click="fetchMessage">Get Server Message (make-request)</button>
     <button @click="fetchAxiosMessage">Get Server Message (make-axios)</button>
@@ -63,6 +64,22 @@ export default {
         if (!res.ok) throw new Error(data.error || 'Login failed');
         this.token = data.token;
         this.message = 'Login successful!';
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    async loginAxios() {
+      this.error = '';
+      try {
+        const res = await fetch('http://localhost:3000/login-axios', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: this.loginUsername, password: this.loginPassword })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        this.token = data.token;
+        this.message = 'Login (Axios) successful!';
       } catch (err) {
         this.error = err.message;
       }
